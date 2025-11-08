@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - amora.ai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        /* Login Page Specific Styles */
+        .login-page {
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #E6E6FA, #F5F5DC, #D8BFD8, #E6E6FA);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(107, 91, 149, 0.1);
+            animation: floatParticle 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .particle:nth-child(1) {
+            width: 20px;
+            height: 20px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 6s;
+        }
+
+        .particle:nth-child(2) {
+            width: 15px;
+            height: 15px;
+            top: 20%;
+            right: 15%;
+            animation-delay: 2s;
+            animation-duration: 8s;
+        }
+
+        .particle:nth-child(3) {
+            width: 25px;
+            height: 25px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+            animation-duration: 7s;
+        }
+
+        .particle:nth-child(4) {
+            width: 18px;
+            height: 18px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 1s;
+            animation-duration: 9s;
+        }
+
+        .particle:nth-child(5) {
+            width: 12px;
+            height: 12px;
+            bottom: 30%;
+            left: 60%;
+            animation-delay: 3s;
+            animation-duration: 5s;
+        }
+
+        @keyframes floatParticle {
+
+            0%,
+            100% {
+                transform: translateY(0px) translateX(0px) scale(1);
+                opacity: 0.3;
+            }
+
+            25% {
+                transform: translateY(-20px) translateX(10px) scale(1.1);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translateY(-40px) translateX(-10px) scale(0.9);
+                opacity: 0.4;
+            }
+
+            75% {
+                transform: translateY(-20px) translateX(5px) scale(1.05);
+                opacity: 0.5;
+            }
+        }
+
+        /* Animated Geometric Shapes */
+        .geometric-shape {
+            position: absolute;
+            opacity: 0.05;
+            animation: rotateShape 20s linear infinite;
+            pointer-events: none;
+        }
+
+        .shape-1 {
+            top: 15%;
+            right: 20%;
+            width: 100px;
+            height: 100px;
+            background: #6B5B95;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation-duration: 15s;
+        }
+
+        .shape-2 {
+            bottom: 25%;
+            left: 15%;
+            width: 80px;
+            height: 80px;
+            background: #8B7AA8;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            animation-duration: 25s;
+            animation-direction: reverse;
+        }
+
+        .shape-3 {
+            top: 70%;
+            right: 30%;
+            width: 60px;
+            height: 60px;
+            background: #D8BFD8;
+            clip-path: circle(50% at 50% 50%);
+            animation-duration: 18s;
+        }
+
+        @keyframes rotateShape {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Login Container */
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px rgba(107, 91, 149, 0.15);
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+            animation: slideInForm 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideInForm {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Logo Section */
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: logoPulse 2s ease-in-out infinite;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.3);
+        }
+
+        @keyframes logoPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 10px 30px rgba(107, 91, 149, 0.3);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 15px 40px rgba(107, 91, 149, 0.4);
+            }
+        }
+
+        .logo-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+            animation: rocketLaunch 3s ease-in-out infinite;
+        }
+
+        @keyframes rocketLaunch {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .login-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #6B5B95;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+
+            0%,
+            100% {
+                text-shadow: 0 0 20px rgba(107, 91, 149, 0.3);
+            }
+
+            50% {
+                text-shadow: 0 0 30px rgba(107, 91, 149, 0.5);
+            }
+        }
+
+        .login-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0.5rem 0 0;
+            font-weight: 500;
+        }
+
+        /* Form Styles */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: #333;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6B5B95;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(107, 91, 149, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder {
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .form-input:focus::placeholder {
+            color: #ccc;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            fill: #6B5B95;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .form-input:focus+.input-icon {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Form Options */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .checkbox-label:hover {
+            color: #6B5B95;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #6B5B95;
+        }
+
+        .forgot-password {
+            color: #6B5B95;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #8B7AA8;
+            text-decoration: underline;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 1.2rem 2rem;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border: none;
+            border-radius: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(107, 91, 149, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(107, 91, 149, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Social Login */
+        .social-login {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .social-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .social-text::before,
+        .social-text::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: rgba(107, 91, 149, 0.2);
+        }
+
+        .social-text::before {
+            left: 0;
+        }
+
+        .social-text::after {
+            right: 0;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0);
+            transition: transform 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .social-btn:hover::before {
+            transform: scale(1);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .social-btn.facebook {
+            background: #1877F2;
+            box-shadow: 0 4px 15px rgba(24, 119, 242, 0.3);
+        }
+
+        .social-btn.twitter {
+            background: #1DA1F2;
+            box-shadow: 0 4px 15px rgba(29, 161, 242, 0.3);
+        }
+
+        .social-btn.google {
+            background: #DB4437;
+            box-shadow: 0 4px 15px rgba(219, 68, 55, 0.3);
+        }
+
+        .social-btn.github {
+            background: #333;
+            box-shadow: 0 4px 15px rgba(51, 51, 51, 0.3);
+        }
+
+        .social-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+            z-index: 1;
+            position: relative;
+        }
+
+        /* Google Sign-In Button */
+        .g_id_signin {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        /* Loading State */
+        .login-btn.loading {
+            pointer-events: none;
+        }
+
+        .login-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes spin {
+            0% {
+                transform: translateY(-50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
+
+        /* Error States */
+        .form-group.error .form-input {
+            border-color: #e74c3c;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeInError 0.3s ease forwards;
+        }
+
+        @keyframes fadeInError {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Success Animation */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(107, 91, 149, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .success-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .success-message {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: successPop 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes successPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) rotate(-5deg);
+            }
+
+            50% {
+                transform: scale(1.05) rotate(2deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .success-message h3 {
+            color: #6B5B95;
+            margin: 0 0 1rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+        }
+
+        .success-message p {
+            color: #666;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .login-title {
+                font-size: 1.8rem;
+            }
+
+            .logo-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .logo-icon svg {
+                width: 30px;
+                height: 30px;
+            }
+
+            .social-icons {
+                gap: 0.8rem;
+            }
+
+            .social-btn {
+                width: 45px;
+                height: 45px;
+            }
+
+            .social-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-page {
+                padding: 1rem;
+            }
+
+            .login-container {
+                padding: 1.5rem;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .form-input {
+                padding: 0.9rem 1rem;
+            }
+
+            .social-text::before,
+            .social-text::after {
+                width: 20%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-page">
+        <!-- Floating Particles -->
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+
+        <!-- Animated Geometric Shapes -->
+        <div class="geometric-shape shape-1"></div>
+        <div class="geometric-shape shape-2"></div>
+        <div class="geometric-shape shape-3"></div>
+
+        <!-- Login Container -->
+        <div class="login-container">
+            <div class="login-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" />
+                        <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="currentColor" />
+                    </svg>
+                </div>
+                <h1 class="login-title">AMORA.AI</h1>
+                <p class="login-subtitle">Where AI Comes to Life! 🚀</p>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" />
+                    </svg>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M18 8H17V6C17 3.24 14.76 1 12 1S7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM12 17C10.9 17 10 16.1 10 15S10.9 13 12 13 14 13.9 14 15 13.1 17 12 17ZM9 8V6C9 4.34 10.34 3 12 3S15 4.34 15 6V8H9Z" />
+                    </svg>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">
+                    LOGIN
+                </button>
+            </form>
+
+            <div class="social-login">
+                <p class="social-text">Or sign in with</p>
+
+                <!-- Google Sign-In Button -->
+                <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+                    data-context="signin" data-ux_mode="popup" data-callback="handleGoogleSignIn"
+                    data-auto_prompt="false">
+                </div>
+
+                <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="outline"
+                    data-text="signin_with" data-size="large" data-logo_alignment="left">
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Overlay -->
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-message">
+                <h3>Welcome back! 🎉</h3>
+                <p>Login successful. Redirecting...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const successOverlay = document.getElementById('successOverlay');
+        const googleSignInBtn = document.getElementById('googleSignInBtn');
+
+        // Form validation and submission
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            clearErrors();
+
+            // Validate form
+            if (validateForm()) {
+                // Show loading state
+                loginBtn.classList.add('loading');
+                loginBtn.textContent = 'LOGGING IN...';
+
+                // Simulate login process
+                setTimeout(() => {
+                    // Save user data
+                    const userData = {
+                        email: emailInput.value.trim(),
+                        name: emailInput.value.trim().split('@')[0], // Extract name from email
+                        loginMethod: 'email'
+                    };
+                    saveUserData(userData);
+
+                    // Show success
+                    showSuccess();
+
+                    // Reset button
+                    loginBtn.classList.remove('loading');
+                    loginBtn.textContent = 'LOGIN';
+                }, 2000);
+            }
+        });
+
+        // Google Sign-In Handler
+        function handleGoogleSignIn(response) {
+            // Decode the JWT token to get user info
+            const responsePayload = parseJwt(response.credential);
+
+            // Save user data
+            const userData = {
+                email: responsePayload.email,
+                name: responsePayload.name,
+                picture: responsePayload.picture,
+                loginMethod: 'google'
+            };
+
+            saveUserData(userData);
+
+            // Show success and redirect
+            showSuccess();
+        }
+
+        // Helper function to parse JWT token
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                console.error('Error parsing JWT:', e);
+                return {};
+            }
+        }
+
+        // Save user data to localStorage and redirect
+        function saveUserData(userData) {
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+
+        // Redirect to dashboard
+        function redirectToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+
+            // Email validation
+            const email = emailInput.value.trim();
+            if (!email) {
+                showError(emailInput, 'Email is required');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                showError(emailInput, 'Please enter a valid email');
+                isValid = false;
+            }
+
+            // Password validation
+            const password = passwordInput.value;
+            if (!password) {
+                showError(passwordInput, 'Password is required');
+                isValid = false;
+            } else if (password.length < 6) {
+                showError(passwordInput, 'Password must be at least 6 characters');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Email validation helper
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Show error
+        function showError(input, message) {
+            const formGroup = input.parentElement;
+            formGroup.classList.add('error');
+
+            // Remove existing error message
+            const existingError = formGroup.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            // Add error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            formGroup.appendChild(errorDiv);
+        }
+
+        // Clear errors
+        function clearErrors() {
+            const errorGroups = document.querySelectorAll('.form-group.error');
+            errorGroups.forEach(group => {
+                group.classList.remove('error');
+                const errorMsg = group.querySelector('.error-message');
+                if (errorMsg) {
+                    errorMsg.remove();
+                }
+            });
+        }
+
+        // Show success overlay
+        function showSuccess() {
+            successOverlay.classList.add('active');
+
+            // Auto redirect after 3 seconds
+            setTimeout(() => {
+                successOverlay.classList.remove('active');
+                redirectToDashboard();
+            }, 3000);
+        }
+
+        // Input focus effects
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function () {
+                this.parentElement.classList.add('focused');
+            });
+
+            input.addEventListener('blur', function () {
+                this.parentElement.classList.remove('focused');
+            });
+        });
+
+        // Social login buttons (placeholder functionality)
+        const socialBtns = document.querySelectorAll('.social-btn');
+        socialBtns.forEach(btn => {
+            if (btn.id !== 'googleSignInBtn') {
+                btn.addEventListener('click', function () {
+                    // In a real app, this would trigger OAuth login
+                    console.log('Social login:', this.title);
+                    alert('Social login for ' + this.title + ' would be implemented here.');
+                });
+            }
+        });
+
+        // Forgot password link
+        document.querySelector('.forgot-password').addEventListener('click', function (e) {
+            e.preventDefault();
+            // In a real app, this would show a password reset modal
+            alert('Password reset functionality would be implemented here.');
+        });
+    </script>
+</body>
+
+</html>

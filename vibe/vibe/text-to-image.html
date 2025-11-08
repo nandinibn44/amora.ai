@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Image - amora.ai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #E6E6FA, #F5F5DC, #D8BFD8, #E6E6FA);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #6B5B95;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #666;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: #6B5B95;
+        }
+
+        .nav-link.active {
+            color: #6B5B95;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.1);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #6B5B95;
+            margin-bottom: 15px;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Text to Image Section */
+        .tti-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .tti-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Input Card */
+        .input-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B5B95;
+        }
+
+        .text-input {
+            width: 100%;
+            min-height: 150px;
+            padding: 20px;
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #6B5B95;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: rgba(107, 91, 149, 0.1);
+            color: #6B5B95;
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(107, 91, 149, 0.2);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .action-btn:disabled:hover {
+            box-shadow: none;
+        }
+
+        /* Settings Card */
+        .settings-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .settings-group {
+            margin-bottom: 25px;
+        }
+
+        .settings-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6B5B95;
+            margin-bottom: 10px;
+        }
+
+        .settings-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .settings-select:focus {
+            outline: none;
+            border-color: #6B5B95;
+        }
+
+        .style-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .style-option {
+            padding: 12px;
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .style-option:hover {
+            border-color: #6B5B95;
+            background: rgba(107, 91, 149, 0.05);
+        }
+
+        .style-option.selected {
+            border-color: #6B5B95;
+            background: rgba(107, 91, 149, 0.1);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(107, 91, 149, 0.2);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #6B5B95;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            background: #8B7AA8;
+            transform: scale(1.1);
+        }
+
+        .slider-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+            color: #6B5B95;
+        }
+
+        /* Output Section */
+        .output-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .output-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B5B95;
+        }
+
+        .output-content {
+            min-height: 400px;
+            padding: 30px;
+            background: rgba(107, 91, 149, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(107, 91, 149, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .image-placeholder {
+            width: 200px;
+            height: 200px;
+            background: rgba(107, 91, 149, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .image-placeholder i {
+            font-size: 3rem;
+            color: rgba(107, 91, 149, 0.3);
+        }
+
+        .generated-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: rgba(107, 91, 149, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .gallery-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B5B95;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(107, 91, 149, 0.2);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .gallery-caption {
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Features Section */
+        .features-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .features-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(107, 91, 149, 0.2);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-link {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #6B5B95;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .input-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .style-options {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .input-card,
+            .settings-card,
+            .output-section,
+            .gallery-section,
+            .features-section {
+                padding: 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="logo-text">AMORA.AI</div>
+            </div>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="text-to-speech.html" class="nav-link">
+                    <i class="fas fa-volume-up"></i> Text to Speech
+                </a>
+                <a href="text-to-image.html" class="nav-link active">
+                    <i class="fas fa-image"></i> Text to Image
+                </a>
+                <a href="games.html" class="nav-link">
+                    <i class="fas fa-gamepad"></i> Games
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1 class="page-title">Text to Image</h1>
+            <p class="page-subtitle">Transform your imagination into stunning visuals with our AI image generator. Describe anything you can imagine, and watch it come to life!</p>
+        </section>
+
+        <!-- Text to Image Section -->
+        <section class="tti-section">
+            <!-- Input Card -->
+            <div class="input-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h2 class="card-title">Describe Your Image</h2>
+                </div>
+                <textarea class="text-input" id="textInput" placeholder="Describe the image you want to create in detail...">A serene mountain landscape at sunset with a crystal clear lake reflecting the colorful sky, surrounded by pine trees and wildflowers</textarea>
+                <div class="input-actions">
+                    <button class="action-btn" id="generateBtn">
+                        <i class="fas fa-magic"></i> Generate Image
+                    </button>
+                    <button class="action-btn secondary" id="clearBtn">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings Card -->
+            <div class="settings-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h2 class="card-title">Image Settings</h2>
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label" for="styleSelect">Art Style</label>
+                    <select class="settings-select" id="styleSelect">
+                        <option value="realistic">Realistic</option>
+                        <option value="digital-art">Digital Art</option>
+                        <option value="photographic">Photographic</option>
+                        <option value="anime">Anime</option>
+                        <option value="painting">Painting</option>
+                        <option value="3d-render">3D Render</option>
+                    </select>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label">Color Scheme</label>
+                    <div class="style-options">
+                        <div class="style-option selected" data-color="vibrant">Vibrant</div>
+                        <div class="style-option" data-color="pastel">Pastel</div>
+                        <div class="style-option" data-color="monochrome">Monochrome</div>
+                        <div class="style-option" data-color="warm">Warm</div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label" for="qualitySlider">Image Quality</label>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="3" step="1" value="2" class="slider" id="qualitySlider">
+                        <span class="slider-value" id="qualityValue">High</span>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label" for="sizeSelect">Image Size</label>
+                    <select class="settings-select" id="sizeSelect">
+                        <option value="512x512">Small (512×512)</option>
+                        <option value="768x768" selected>Medium (768×768)</option>
+                        <option value="1024x1024">Large (1024×1024)</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Section -->
+        <section class="output-section">
+            <div class="output-header">
+                <h2 class="output-title">Generated Image</h2>
+                <div class="image-actions" id="imageActions" style="display: none;">
+                    <button class="action-btn secondary" id="downloadBtn">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button class="action-btn secondary" id="shareBtn">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                    <button class="action-btn secondary" id="regenerateBtn">
+                        <i class="fas fa-sync"></i> Regenerate
+                    </button>
+                </div>
+            </div>
+            <div class="output-content" id="outputContent">
+                <div class="image-placeholder">
+                    <i class="fas fa-image"></i>
+                </div>
+                <p>Your generated image will appear here. Click "Generate Image" to create your visualization.</p>
+            </div>
+            <div class="status-indicator" id="statusIndicator" style="display: none;">
+                <div class="status-dot"></div>
+                <span id="statusText">Generating your image...</span>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section">
+            <div class="gallery-header">
+                <h2 class="gallery-title">Inspiration Gallery</h2>
+                <button class="action-btn secondary" id="refreshGalleryBtn">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+            </div>
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Gallery items will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="features-title">Why Choose Our AI Image Generator?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">Advanced AI</h3>
+                    <p class="feature-description">Powered by state-of-the-art neural networks that understand context and create highly detailed, realistic images.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="feature-title">Multiple Styles</h3>
+                    <p class="feature-description">Choose from various art styles including realistic, digital art, anime, painting, and 3D rendering.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3 class="feature-title">High Resolution</h3>
+                    <p class="feature-description">Generate images up to 1024×1024 resolution, perfect for printing, social media, and professional use.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Fast Generation</h3>
+                    <p class="feature-description">Get your images in seconds with our optimized AI models and cloud processing infrastructure.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p class="footer-text">&copy; 2023 AMORA.AI. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const textInput = document.getElementById('textInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const regenerateBtn = document.getElementById('regenerateBtn');
+        const refreshGalleryBtn = document.getElementById('refreshGalleryBtn');
+        const styleSelect = document.getElementById('styleSelect');
+        const qualitySlider = document.getElementById('qualitySlider');
+        const sizeSelect = document.getElementById('sizeSelect');
+        const qualityValue = document.getElementById('qualityValue');
+        const outputContent = document.getElementById('outputContent');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+        const imageActions = document.getElementById('imageActions');
+        const galleryGrid = document.getElementById('galleryGrid');
+        const styleOptions = document.querySelectorAll('.style-option');
+
+        // Sample gallery images
+        const galleryImages = [
+            {
+                prompt: "A majestic dragon flying over a medieval castle at sunrise",
+                style: "digital-art",
+                color: "vibrant"
+            },
+            {
+                prompt: "A cyberpunk cityscape with neon lights and flying cars",
+                style: "3d-render",
+                color: "vibrant"
+            },
+            {
+                prompt: "A peaceful Japanese garden with cherry blossoms and koi pond",
+                style: "realistic",
+                color: "pastel"
+            },
+            {
+                prompt: "An astronaut floating in space with Earth in the background",
+                style: "photographic",
+                color: "monochrome"
+            },
+            {
+                prompt: "A fantasy forest with glowing mushrooms and magical creatures",
+                style: "digital-art",
+                color: "vibrant"
+            },
+            {
+                prompt: "A vintage coffee shop with warm lighting and cozy atmosphere",
+                style: "painting",
+                color: "warm"
+            }
+        ];
+
+        // Current generated image
+        let currentImage = null;
+
+        // Initialize the application
+        function initTextToImage() {
+            // Update slider values
+            updateSliderValues();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Load gallery
+            loadGallery();
+        }
+
+        // Update slider value displays
+        function updateSliderValues() {
+            const qualityLabels = ['Low', 'Medium', 'High'];
+            qualityValue.textContent = qualityLabels[qualitySlider.value - 1];
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Slider events
+            qualitySlider.addEventListener('input', updateSliderValues);
+
+            // Button events
+            generateBtn.addEventListener('click', generateImage);
+            clearBtn.addEventListener('click', clearInput);
+            downloadBtn.addEventListener('click', downloadImage);
+            shareBtn.addEventListener('click', shareImage);
+            regenerateBtn.addEventListener('click', generateImage);
+            refreshGalleryBtn.addEventListener('click', loadGallery);
+
+            // Style option events
+            styleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    styleOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        // Generate image from text
+        function generateImage() {
+            const prompt = textInput.value.trim();
+            
+            if (!prompt) {
+                showOutputMessage('Please enter a description for your image.', 'error');
+                return;
+            }
+
+            // Disable generate button during processing
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+
+            // Show status indicator
+            statusIndicator.style.display = 'flex';
+            statusText.textContent = 'AI is creating your image...';
+
+            // Clear previous output
+            outputContent.innerHTML = '';
+            imageActions.style.display = 'none';
+
+            // Get selected settings
+            const style = styleSelect.value;
+            const color = document.querySelector('.style-option.selected').dataset.color;
+            const quality = qualitySlider.value;
+            const size = sizeSelect.value;
+
+            // Simulate AI image generation (in a real app, this would call an API)
+            setTimeout(() => {
+                // Create a simulated image
+                const imageUrl = createSimulatedImage(prompt, style, color, quality, size);
+                
+                // Display the image
+                displayGeneratedImage(imageUrl, prompt);
+                
+                // Enable generate button
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<i class="fas fa-magic"></i> Generate Image';
+                
+                // Hide status indicator
+                statusIndicator.style.display = 'none';
+                
+                // Store the current image
+                currentImage = {
+                    url: imageUrl,
+                    prompt: prompt,
+                    style: style,
+                    color: color,
+                    quality: quality,
+                    size: size
+                };
+                
+                // Add to gallery (in a real app, this would be saved to user's account)
+                addToGallery(prompt, style, color);
+                
+            }, 3000); // Simulate 3-second processing time
+        }
+
+        // Create a simulated image (in a real app, this would call an AI API)
+        function createSimulatedImage(prompt, style, color, quality, size) {
+            // This is a simplified simulation
+            // In a real implementation, this would call an AI image generation API
+            
+            // Create a canvas to generate a placeholder image
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size based on selected size
+            const [width, height] = size.split('x').map(Number);
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Generate a gradient background based on color scheme
+            let gradient;
+            switch(color) {
+                case 'vibrant':
+                    gradient = ctx.createLinearGradient(0, 0, width, height);
+                    gradient.addColorStop(0, '#FF6B6B');
+                    gradient.addColorStop(0.5, '#4ECDC4');
+                    gradient.addColorStop(1, '#45B7D1');
+                    break;
+                case 'pastel':
+                    gradient = ctx.createLinearGradient(0, 0, width, height);
+                    gradient.addColorStop(0, '#FFD3B6');
+                    gradient.addColorStop(0.5, '#FFAAA5');
+                    gradient.addColorStop(1, '#DCEDC1');
+                    break;
+                case 'monochrome':
+                    gradient = ctx.createLinearGradient(0, 0, width, height);
+                    gradient.addColorStop(0, '#666666');
+                    gradient.addColorStop(1, '#999999');
+                    break;
+                case 'warm':
+                    gradient = ctx.createLinearGradient(0, 0, width, height);
+                    gradient.addColorStop(0, '#FF9A8B');
+                    gradient.addColorStop(0.5, '#FF6B6B');
+                    gradient.addColorStop(1, '#FF8E53');
+                    break;
+            }
+            
+            // Fill background
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            // Add some simple shapes to simulate an image
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.beginPath();
+            ctx.arc(width/2, height/2, Math.min(width, height)/4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Add text indicating this is a simulation
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 24px Poppins';
+            ctx.textAlign = 'center';
+            ctx.fillText('AI Generated Image', width/2, height/2);
+            
+            ctx.font = '16px Poppins';
+            ctx.fillText('Simulated Preview', width/2, height/2 + 30);
+            
+            // Return the data URL
+            return canvas.toDataURL('image/png');
+        }
+
+        // Display the generated image
+        function displayGeneratedImage(imageUrl, prompt) {
+            outputContent.innerHTML = `
+                <img src="${imageUrl}" alt="${prompt}" class="generated-image" id="generatedImage">
+                <p><strong>Prompt:</strong> "${prompt}"</p>
+            `;
+            
+            // Show the image actions
+            imageActions.style.display = 'flex';
+        }
+
+        // Show output message
+        function showOutputMessage(message, type = 'info') {
+            const color = type === 'error' ? '#e74c3c' : '#666';
+            outputContent.innerHTML = `
+                <div class="image-placeholder">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                </div>
+                <p style="color: ${color}">${message}</p>
+            `;
+        }
+
+        // Clear input
+        function clearInput() {
+            textInput.value = '';
+            outputContent.innerHTML = `
+                <div class="image-placeholder">
+                    <i class="fas fa-image"></i>
+                </div>
+                <p>Your generated image will appear here. Click "Generate Image" to create your visualization.</p>
+            `;
+            imageActions.style.display = 'none';
+            statusIndicator.style.display = 'none';
+        }
+
+        // Download image
+        function downloadImage() {
+            if (!currentImage) return;
+            
+            // Create a temporary link for download
+            const link = document.createElement('a');
+            link.href = currentImage.url;
+            link.download = `amora-ai-image-${Date.now()}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show success message
+            showOutputMessage('Image downloaded successfully!', 'success');
+            setTimeout(() => {
+                if (currentImage) {
+                    displayGeneratedImage(currentImage.url, currentImage.prompt);
+                }
+            }, 2000);
+        }
+
+        // Share image
+        function shareImage() {
+            if (!currentImage) return;
+            
+            // Simulate share functionality
+            // In a real app, this would use the Web Share API or social media APIs
+            statusIndicator.style.display = 'flex';
+            statusText.textContent = 'Preparing share options...';
+            
+            setTimeout(() => {
+                statusIndicator.style.display = 'none';
+                showOutputMessage('Share options ready! (Simulated)', 'success');
+                setTimeout(() => {
+                    if (currentImage) {
+                        displayGeneratedImage(currentImage.url, currentImage.prompt);
+                    }
+                }, 2000);
+            }, 1500);
+        }
+
+        // Load gallery
+        function loadGallery() {
+            galleryGrid.innerHTML = '';
+            
+            galleryImages.forEach((image, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.innerHTML = `
+                    <div class="image-placeholder" style="width: 100%; height: 150px; margin: 0;">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="gallery-caption">${image.prompt}</div>
+                `;
+                
+                galleryItem.addEventListener('click', () => {
+                    textInput.value = image.prompt;
+                    styleSelect.value = image.style;
+                    
+                    // Select the color option
+                    styleOptions.forEach(opt => {
+                        opt.classList.remove('selected');
+                        if (opt.dataset.color === image.color) {
+                            opt.classList.add('selected');
+                        }
+                    });
+                });
+                
+                galleryGrid.appendChild(galleryItem);
+            });
+        }
+
+        // Add to gallery
+        function addToGallery(prompt, style, color) {
+            // In a real app, this would save to a database
+            // For this demo, we'll just add to the front of the array
+            galleryImages.unshift({
+                prompt: prompt,
+                style: style,
+                color: color
+            });
+            
+            // Keep only the last 6 images
+            if (galleryImages.length > 6) {
+                galleryImages.pop();
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', initTextToImage);
+    </script>
+</body>
+</html>

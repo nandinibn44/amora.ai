@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Builder - amora.ai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #E6E6FA, #F5F5DC, #D8BFD8, #E6E6FA);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #6B5B95;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #666;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: #6B5B95;
+        }
+
+        .nav-link.active {
+            color: #6B5B95;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.1);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #6B5B95;
+            margin-bottom: 15px;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Story Builder Section */
+        .story-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .story-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Input Card */
+        .input-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B5B95;
+        }
+
+        .text-input {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #6B5B95;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: rgba(107, 91, 149, 0.1);
+            color: #6B5B95;
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(107, 91, 149, 0.2);
+        }
+
+        /* Settings Card */
+        .settings-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .settings-group {
+            margin-bottom: 25px;
+        }
+
+        .settings-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6B5B95;
+            margin-bottom: 10px;
+        }
+
+        .settings-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .settings-select:focus {
+            outline: none;
+            border-color: #6B5B95;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(107, 91, 149, 0.2);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #6B5B95;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            background: #8B7AA8;
+            transform: scale(1.1);
+        }
+
+        .slider-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+            color: #6B5B95;
+        }
+
+        /* Story Elements */
+        .story-elements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .element-btn {
+            background: rgba(107, 91, 149, 0.1);
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #6B5B95;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .element-btn:hover {
+            background: rgba(107, 91, 149, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Output Section */
+        .output-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .output-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B5B95;
+        }
+
+        .output-content {
+            min-height: 150px;
+            padding: 20px;
+            background: rgba(107, 91, 149, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(107, 91, 149, 0.1);
+            line-height: 1.6;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: rgba(107, 91, 149, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Features Section */
+        .features-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .features-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(107, 91, 149, 0.2);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-link {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #6B5B95;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .input-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .input-card,
+            .settings-card,
+            .output-section,
+            .features-section {
+                padding: 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="logo-text">STORY BUILDER</div>
+            </div>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="story-builder.html" class="nav-link active">
+                    <i class="fas fa-pen-fancy"></i> Story Builder
+                </a>
+                <a href="text-to-speech.html" class="nav-link">
+                    <i class="fas fa-volume-up"></i> Text to Speech
+                </a>
+                <a href="games.html" class="nav-link">
+                    <i class="fas fa-gamepad"></i> Games
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1 class="page-title">Story Builder</h1>
+            <p class="page-subtitle">Create amazing stories with our AI-powered story builder. Choose elements, customize settings, and bring your imagination to life!</p>
+        </section>
+
+        <!-- Story Builder Section -->
+        <section class="story-section">
+            <!-- Input Card -->
+            <div class="input-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-pen-nib"></i>
+                    </div>
+                    <h2 class="card-title">Build Your Story</h2>
+                </div>
+                
+                <div class="story-elements">
+                    <button class="element-btn" data-element="character">Add Character</button>
+                    <button class="element-btn" data-element="setting">Add Setting</button>
+                    <button class="element-btn" data-element="plot">Add Plot</button>
+                    <button class="element-btn" data-element="conflict">Add Conflict</button>
+                    <button class="element-btn" data-element="resolution">Add Resolution</button>
+                    <button class="element-btn" data-element="dialogue">Add Dialogue</button>
+                </div>
+                
+                <textarea class="text-input" id="storyInput" placeholder="Start building your story here...">Once upon a time, in a magical kingdom far away...</textarea>
+                <div class="input-actions">
+                    <button class="action-btn" id="generateBtn">
+                        <i class="fas fa-magic"></i> Generate Story
+                    </button>
+                    <button class="action-btn secondary" id="speakBtn">
+                        <i class="fas fa-volume-up"></i> Read Story
+                    </button>
+                    <button class="action-btn secondary" id="clearBtn">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                    <button class="action-btn secondary" id="saveBtn">
+                        <i class="fas fa-save"></i> Save Story
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings Card -->
+            <div class="settings-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h2 class="card-title">Story Settings</h2>
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label" for="genreSelect">Story Genre</label>
+                    <select class="settings-select" id="genreSelect">
+                        <option value="fantasy">Fantasy</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="mystery">Mystery</option>
+                        <option value="scifi">Science Fiction</option>
+                        <option value="romance">Romance</option>
+                        <option value="horror">Horror</option>
+                    </select>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label" for="lengthSlider">Story Length</label>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" step="1" value="5" class="slider" id="lengthSlider">
+                        <span class="slider-value" id="lengthValue">5</span>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label" for="styleSelect">Writing Style</label>
+                    <select class="settings-select" id="styleSelect">
+                        <option value="simple">Simple</option>
+                        <option value="descriptive">Descriptive</option>
+                        <option value="poetic">Poetic</option>
+                        <option value="humorous">Humorous</option>
+                        <option value="dramatic">Dramatic</option>
+                    </select>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label" for="ageSelect">Target Age Group</label>
+                    <select class="settings-select" id="ageSelect">
+                        <option value="children">Children (5-12)</option>
+                        <option value="teen">Teen (13-17)</option>
+                        <option value="adult">Adult (18+)</option>
+                        <option value="all">All Ages</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Section -->
+        <section class="output-section">
+            <div class="output-header">
+                <h2 class="output-title">Your Story</h2>
+                <button class="action-btn secondary" id="downloadBtn">
+                    <i class="fas fa-download"></i> Download Story
+                </button>
+            </div>
+            <div class="output-content" id="outputContent">
+                <p>Your generated story will appear here. Click "Generate Story" to create your masterpiece!</p>
+            </div>
+            <audio class="audio-player" id="audioPlayer" controls style="display: none;"></audio>
+            <div class="status-indicator" id="statusIndicator" style="display: none;">
+                <div class="status-dot"></div>
+                <span id="statusText">Generating your story...</span>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="features-title">Why Use Our Story Builder?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered</h3>
+                    <p class="feature-description">Uses advanced AI to generate creative and engaging stories based on your inputs and preferences.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3 class="feature-title">Fully Customizable</h3>
+                    <p class="feature-description">Adjust genre, length, style, and target audience to create the perfect story for your needs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+                    <h3 class="feature-title">Text-to-Speech</h3>
+                    <p class="feature-description">Listen to your stories with our integrated text-to-speech feature with customizable voices.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3 class="feature-title">Save & Share</h3>
+                    <p class="feature-description">Download your stories in multiple formats and share them with friends and family.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p class="footer-text">&copy; 2023 AMORA.AI. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const storyInput = document.getElementById('storyInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const speakBtn = document.getElementById('speakBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const genreSelect = document.getElementById('genreSelect');
+        const lengthSlider = document.getElementById('lengthSlider');
+        const styleSelect = document.getElementById('styleSelect');
+        const ageSelect = document.getElementById('ageSelect');
+        const lengthValue = document.getElementById('lengthValue');
+        const outputContent = document.getElementById('outputContent');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+        const elementBtns = document.querySelectorAll('.element-btn');
+
+        // Story elements data
+        const storyElements = {
+            character: [
+                "a brave knight", "a wise wizard", "a curious child", "a mysterious stranger",
+                "a talking animal", "a powerful queen", "a humble farmer", "a clever thief"
+            ],
+            setting: [
+                "in a magical forest", "in a futuristic city", "in an ancient castle",
+                "on a distant planet", "in a small village", "in a dream world",
+                "on a pirate ship", "in a hidden valley"
+            ],
+            plot: [
+                "on a quest to find a lost treasure", "trying to solve a mysterious riddle",
+                "battling an ancient evil", "discovering a magical power",
+                "making an incredible invention", "saving their home from danger",
+                "learning an important lesson", "making a new friend"
+            ],
+            conflict: [
+                "but they faced a dangerous obstacle", "however, a villain appeared",
+                "unfortunately, a storm was coming", "but they lost their way",
+                "however, they had to make a difficult choice", "but a secret was revealed",
+                "unfortunately, time was running out", "but they were betrayed"
+            ],
+            resolution: [
+                "and they lived happily ever after", "and they became heroes",
+                "and they discovered the true meaning of friendship", "and they saved the day",
+                "and they learned to believe in themselves", "and peace was restored",
+                "and they found what they were looking for", "and they started a new adventure"
+            ],
+            dialogue: [
+                "\"I believe in you!\"", "\"We can do this together!\"", "\"What's that over there?\"",
+                "\"This changes everything!\"", "\"I have a plan!\"", "\"Never give up!\"",
+                "\"The answer was here all along!\"", "\"Let's be brave!\""
+            ]
+        };
+
+        // Speech Synthesis
+        let speech = null;
+        let isSpeaking = false;
+        let isPaused = false;
+
+        // Initialize the application
+        function initStoryBuilder() {
+            // Update slider values
+            updateSliderValues();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Load saved stories
+            loadSavedStories();
+        }
+
+        // Update slider value displays
+        function updateSliderValues() {
+            lengthValue.textContent = lengthSlider.value;
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Slider events
+            lengthSlider.addEventListener('input', updateSliderValues);
+
+            // Button events
+            generateBtn.addEventListener('click', generateStory);
+            speakBtn.addEventListener('click', speakStory);
+            clearBtn.addEventListener('click', clearStory);
+            saveBtn.addEventListener('click', saveStory);
+            downloadBtn.addEventListener('click', downloadStory);
+
+            // Element buttons
+            elementBtns.forEach(btn => {
+                btn.addEventListener('click', addStoryElement);
+            });
+        }
+
+        // Add story element
+        function addStoryElement(event) {
+            const elementType = event.target.dataset.element;
+            const elements = storyElements[elementType];
+            const randomElement = elements[Math.floor(Math.random() * elements.length)];
+            
+            // Add the element to the story input
+            const currentText = storyInput.value;
+            storyInput.value = currentText + (currentText ? ' ' : '') + randomElement;
+            
+            // Show confirmation
+            showStatus(`Added ${elementType}: ${randomElement}`, 2000);
+        }
+
+        // Generate story
+        function generateStory() {
+            const userInput = storyInput.value.trim();
+            const genre = genreSelect.value;
+            const length = parseInt(lengthSlider.value);
+            const style = styleSelect.value;
+            const ageGroup = ageSelect.value;
+            
+            if (!userInput) {
+                outputContent.innerHTML = '<p style="color: #e74c3c;">Please enter some story ideas or use the story elements to get started.</p>';
+                return;
+            }
+
+            // Show loading state
+            statusIndicator.style.display = 'flex';
+            statusText.textContent = 'Generating your story...';
+
+            // Simulate AI story generation
+            setTimeout(() => {
+                const generatedStory = generateAIText(userInput, genre, length, style, ageGroup);
+                
+                // Display the generated story
+                outputContent.innerHTML = `
+                    <h3 style="color: #6B5B95; margin-bottom: 15px;">Your ${genre} Story:</h3>
+                    <p style="white-space: pre-line; line-height: 1.8;">${generatedStory}</p>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(107, 91, 149, 0.1); border-radius: 10px;">
+                        <strong>Story Details:</strong><br>
+                        Genre: ${genre}<br>
+                        Length: ${length}/10<br>
+                        Style: ${style}<br>
+                        Age Group: ${ageGroup}
+                    </div>
+                `;
+                
+                // Hide status
+                statusIndicator.style.display = 'none';
+                
+                // Show success message
+                showStatus('Story generated successfully!', 3000);
+            }, 2000);
+        }
+
+        // Generate AI text (simulated)
+        function generateAIText(input, genre, length, style, ageGroup) {
+            // This is a simplified simulation - in a real app, this would call an AI API
+            const lengthMultiplier = length * 50;
+            const baseStory = input + ' ';
+            
+            // Add more content based on length
+            let additionalContent = '';
+            for (let i = 0; i < length; i++) {
+                const randomElementType = Object.keys(storyElements)[Math.floor(Math.random() * Object.keys(storyElements).length)];
+                const randomElement = storyElements[randomElementType][Math.floor(Math.random() * storyElements[randomElementType].length)];
+                additionalContent += randomElement + '. ';
+            }
+            
+            return baseStory + additionalContent + 'And so the story continues...';
+        }
+
+        // Speak the story
+        function speakStory() {
+            const storyText = outputContent.textContent || outputContent.innerText;
+            
+            if (!storyText || storyText.includes('Your generated story will appear here')) {
+                outputContent.innerHTML = '<p style="color: #e74c3c;">Please generate a story first.</p>';
+                return;
+            }
+
+            // Stop any current speech
+            if (isSpeaking) {
+                window.speechSynthesis.cancel();
+            }
+
+            // Create new speech synthesis utterance
+            speech = new SpeechSynthesisUtterance(storyText);
+            
+            // Set speech properties
+            speech.rate = 1;
+            speech.pitch = 1;
+            speech.volume = 1;
+            
+            // Set up event handlers
+            speech.onstart = function() {
+                isSpeaking = true;
+                isPaused = false;
+                statusIndicator.style.display = 'flex';
+                statusText.textContent = 'Reading story...';
+                speakBtn.disabled = true;
+            };
+            
+            speech.onend = function() {
+                isSpeaking = false;
+                isPaused = false;
+                statusIndicator.style.display = 'none';
+                speakBtn.disabled = false;
+                showStatus('Finished reading story', 2000);
+            };
+            
+            speech.onerror = function(event) {
+                isSpeaking = false;
+                isPaused = false;
+                statusIndicator.style.display = 'none';
+                outputContent.innerHTML += `<p style="color: #e74c3c;">Error reading story. Please try again.</p>`;
+                speakBtn.disabled = false;
+            };
+            
+            // Start speaking
+            window.speechSynthesis.speak(speech);
+        }
+
+        // Clear story
+        function clearStory() {
+            storyInput.value = '';
+            outputContent.innerHTML = '<p>Your generated story will appear here. Click "Generate Story" to create your masterpiece!</p>';
+            audioPlayer.style.display = 'none';
+            statusIndicator.style.display = 'none';
+            showStatus('Story cleared', 2000);
+        }
+
+        // Save story
+        function saveStory() {
+            const storyText = outputContent.textContent || outputContent.innerText;
+            
+            if (!storyText || storyText.includes('Your generated story will appear here')) {
+                outputContent.innerHTML = '<p style="color: #e74c3c;">Please generate a story first.</p>';
+                return;
+            }
+            
+            // Save to localStorage (simulated)
+            const stories = JSON.parse(localStorage.getItem('savedStories') || '[]');
+            stories.push({
+                title: `Story ${stories.length + 1}`,
+                content: storyText,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('savedStories', JSON.stringify(stories));
+            
+            showStatus('Story saved successfully!', 3000);
+        }
+
+        // Load saved stories
+        function loadSavedStories() {
+            // This would load from localStorage or a backend in a real app
+            console.log('Loading saved stories...');
+        }
+
+        // Download story
+        function downloadStory() {
+            const storyText = outputContent.textContent || outputContent.innerText;
+            
+            if (!storyText || storyText.includes('Your generated story will appear here')) {
+                outputContent.innerHTML = '<p style="color: #e74c3c;">Please generate a story first.</p>';
+                return;
+            }
+            
+            // Simulate download process
+            statusIndicator.style.display = 'flex';
+            statusText.textContent = 'Preparing download...';
+            
+            setTimeout(() => {
+                // In a real implementation, this would create and download a file
+                // For this demo, we'll show a success message
+                statusText.textContent = 'Download ready!';
+                
+                outputContent.innerHTML += '<p style="color: #4CAF50; margin-top: 15px;"><i class="fas fa-check"></i> Story ready for download (simulated).</p>';
+                
+                // Reset status after a delay
+                setTimeout(() => {
+                    statusIndicator.style.display = 'none';
+                }, 2000);
+            }, 1500);
+        }
+
+        // Show status message
+        function showStatus(message, duration = 3000) {
+            // Create temporary status message
+            const tempStatus = document.createElement('div');
+            tempStatus.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #6B5B95;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(107, 91, 149, 0.3);
+                z-index: 1000;
+                font-family: 'Poppins', sans-serif;
+                font-weight: 600;
+            `;
+            tempStatus.textContent = message;
+            document.body.appendChild(tempStatus);
+            
+            // Remove after duration
+            setTimeout(() => {
+                document.body.removeChild(tempStatus);
+            }, duration);
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', initStoryBuilder);
+    </script>
+</body>
+</html>

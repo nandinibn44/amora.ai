@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Speech - amora.ai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #E6E6FA, #F5F5DC, #D8BFD8, #E6E6FA);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #6B5B95;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #666;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: #6B5B95;
+        }
+
+        .nav-link.active {
+            color: #6B5B95;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.1);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #6B5B95;
+            margin-bottom: 15px;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Text to Speech Section */
+        .tts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .tts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Input Card */
+        .input-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B5B95;
+        }
+
+        .text-input {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #6B5B95;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: rgba(107, 91, 149, 0.1);
+            color: #6B5B95;
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(107, 91, 149, 0.2);
+        }
+
+        /* Settings Card */
+        .settings-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .settings-group {
+            margin-bottom: 25px;
+        }
+
+        .settings-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6B5B95;
+            margin-bottom: 10px;
+        }
+
+        .settings-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .settings-select:focus {
+            outline: none;
+            border-color: #6B5B95;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(107, 91, 149, 0.2);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #6B5B95;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            background: #8B7AA8;
+            transform: scale(1.1);
+        }
+
+        .slider-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+            color: #6B5B95;
+        }
+
+        /* Output Section */
+        .output-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .output-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B5B95;
+        }
+
+        .output-content {
+            min-height: 150px;
+            padding: 20px;
+            background: rgba(107, 91, 149, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: rgba(107, 91, 149, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Features Section */
+        .features-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .features-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(107, 91, 149, 0.2);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-link {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #6B5B95;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .input-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .input-card,
+            .settings-card,
+            .output-section,
+            .features-section {
+                padding: 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="logo-text">AMORA.AI</div>
+            </div>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="text-to-speech.html" class="nav-link active">
+                    <i class="fas fa-volume-up"></i> Text to Speech
+                </a>
+                <a href="text-to-image.html" class="nav-link">
+                    <i class="fas fa-image"></i> Text to Image
+                </a>
+                <a href="games.html" class="nav-link">
+                    <i class="fas fa-gamepad"></i> Games
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1 class="page-title">Text to Speech</h1>
+            <p class="page-subtitle">Convert your written text into natural-sounding speech with our advanced AI technology. Customize voice, speed, and pitch to create the perfect audio experience.</p>
+        </section>
+
+        <!-- Text to Speech Section -->
+        <section class="tts-section">
+            <!-- Input Card -->
+            <div class="input-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h2 class="card-title">Enter Your Text</h2>
+                </div>
+                <textarea class="text-input" id="textInput" placeholder="Type or paste your text here...">Welcome to AMORA.AI Text to Speech! This advanced tool can convert any written text into natural-sounding speech. Try it out by entering your own text or using the sample provided.</textarea>
+                <div class="input-actions">
+                    <button class="action-btn" id="speakBtn">
+                        <i class="fas fa-play"></i> Speak Text
+                    </button>
+                    <button class="action-btn secondary" id="pauseBtn">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="action-btn secondary" id="stopBtn">
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                    <button class="action-btn secondary" id="clearBtn">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings Card -->
+            <div class="settings-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h2 class="card-title">Voice Settings</h2>
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label" for="voiceSelect">Select Voice</label>
+                    <select class="settings-select" id="voiceSelect">
+                        <option value="Alex">Alex (Default)</option>
+                        <option value="Samantha">Samantha</option>
+                        <option value="Daniel">Daniel</option>
+                        <option value="Victoria">Victoria</option>
+                        <option value="Fred">Fred</option>
+                    </select>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label" for="rateSlider">Speech Rate</label>
+                    <div class="slider-container">
+                        <input type="range" min="0.5" max="2" step="0.1" value="1" class="slider" id="rateSlider">
+                        <span class="slider-value" id="rateValue">1.0</span>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label" for="pitchSlider">Voice Pitch</label>
+                    <div class="slider-container">
+                        <input type="range" min="0.5" max="2" step="0.1" value="1" class="slider" id="pitchSlider">
+                        <span class="slider-value" id="pitchValue">1.0</span>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label" for="volumeSlider">Volume</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="1" step="0.1" value="1" class="slider" id="volumeSlider">
+                        <span class="slider-value" id="volumeValue">1.0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Section -->
+        <section class="output-section">
+            <div class="output-header">
+                <h2 class="output-title">Speech Output</h2>
+                <button class="action-btn secondary" id="downloadBtn">
+                    <i class="fas fa-download"></i> Download Audio
+                </button>
+            </div>
+            <div class="output-content" id="outputContent">
+                <p>Your converted speech will appear here. Click "Speak Text" to generate audio from your text.</p>
+            </div>
+            <audio class="audio-player" id="audioPlayer" controls style="display: none;"></audio>
+            <div class="status-indicator" id="statusIndicator" style="display: none;">
+                <div class="status-dot"></div>
+                <span id="statusText">Processing your text...</span>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="features-title">Why Choose Our Text to Speech?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered</h3>
+                    <p class="feature-description">Uses advanced neural networks to generate natural, human-like speech with proper intonation and emotion.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3 class="feature-title">Fully Customizable</h3>
+                    <p class="feature-description">Adjust voice type, speed, pitch, and volume to create the perfect audio for your needs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3 class="feature-title">Download & Share</h3>
+                    <p class="feature-description">Save your audio files in MP3 format and share them across platforms.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="feature-title">Multi-Language</h3>
+                    <p class="feature-description">Supports multiple languages and accents for global accessibility.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p class="footer-text">&copy; 2023 AMORA.AI. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const textInput = document.getElementById('textInput');
+        const speakBtn = document.getElementById('speakBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const voiceSelect = document.getElementById('voiceSelect');
+        const rateSlider = document.getElementById('rateSlider');
+        const pitchSlider = document.getElementById('pitchSlider');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const rateValue = document.getElementById('rateValue');
+        const pitchValue = document.getElementById('pitchValue');
+        const volumeValue = document.getElementById('volumeValue');
+        const outputContent = document.getElementById('outputContent');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+
+        // Speech Synthesis
+        let speech = null;
+        let isSpeaking = false;
+        let isPaused = false;
+
+        // Initialize speech synthesis
+        function initSpeechSynthesis() {
+            // Check if browser supports speech synthesis
+            if (!('speechSynthesis' in window)) {
+                outputContent.innerHTML = '<p style="color: #e74c3c;">Your browser does not support speech synthesis. Please try using Chrome, Safari, or Edge.</p>';
+                speakBtn.disabled = true;
+                return;
+            }
+
+            // Update slider values
+            updateSliderValues();
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
+
+        // Update slider value displays
+        function updateSliderValues() {
+            rateValue.textContent = rateSlider.value;
+            pitchValue.textContent = pitchSlider.value;
+            volumeValue.textContent = volumeSlider.value;
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Slider events
+            rateSlider.addEventListener('input', updateSliderValues);
+            pitchSlider.addEventListener('input', updateSliderValues);
+            volumeSlider.addEventListener('input', updateSliderValues);
+
+            // Button events
+            speakBtn.addEventListener('click', speakText);
+            pauseBtn.addEventListener('click', togglePause);
+            stopBtn.addEventListener('click', stopSpeech);
+            clearBtn.addEventListener('click', clearText);
+            downloadBtn.addEventListener('click', downloadAudio);
+        }
+
+        // Speak the text
+        function speakText() {
+            const text = textInput.value.trim();
+            
+            if (!text) {
+                outputContent.innerHTML = '<p style="color: #e74c3c;">Please enter some text to convert to speech.</p>';
+                return;
+            }
+
+            // Stop any current speech
+            if (isSpeaking) {
+                window.speechSynthesis.cancel();
+            }
+
+            // Create new speech synthesis utterance
+            speech = new SpeechSynthesisUtterance(text);
+            
+            // Set speech properties
+            speech.voice = getSelectedVoice();
+            speech.rate = parseFloat(rateSlider.value);
+            speech.pitch = parseFloat(pitchSlider.value);
+            speech.volume = parseFloat(volumeSlider.value);
+            
+            // Set up event handlers
+            speech.onstart = function() {
+                isSpeaking = true;
+                isPaused = false;
+                statusIndicator.style.display = 'flex';
+                statusText.textContent = 'Speaking...';
+                outputContent.innerHTML = `<p><strong>Speaking:</strong> "${text}"</p>`;
+                speakBtn.disabled = true;
+                pauseBtn.textContent = 'Pause';
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            };
+            
+            speech.onend = function() {
+                isSpeaking = false;
+                isPaused = false;
+                statusIndicator.style.display = 'none';
+                outputContent.innerHTML += '<p><i class="fas fa-check" style="color: #4CAF50;"></i> Speech completed!</p>';
+                speakBtn.disabled = false;
+                pauseBtn.textContent = 'Pause';
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            };
+            
+            speech.onerror = function(event) {
+                isSpeaking = false;
+                isPaused = false;
+                statusIndicator.style.display = 'none';
+                outputContent.innerHTML = `<p style="color: #e74c3c;">Error: ${event.error}. Please try again.</p>`;
+                speakBtn.disabled = false;
+                pauseBtn.textContent = 'Pause';
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            };
+            
+            // Start speaking
+            window.speechSynthesis.speak(speech);
+        }
+
+        // Get selected voice
+        function getSelectedVoice() {
+            // In a real implementation, this would use the Web Speech API voices
+            // For this demo, we'll simulate different voices
+            const voiceName = voiceSelect.value;
+            
+            // This is a simplified implementation
+            // In a real app, you would load available voices and select the appropriate one
+            return null; // Let the browser use default voice
+        }
+
+        // Toggle pause/resume
+        function togglePause() {
+            if (!isSpeaking) return;
+            
+            if (isPaused) {
+                window.speechSynthesis.resume();
+                isPaused = false;
+                pauseBtn.textContent = 'Pause';
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                statusText.textContent = 'Speaking...';
+            } else {
+                window.speechSynthesis.pause();
+                isPaused = true;
+                pauseBtn.textContent = 'Resume';
+                pauseBtn.innerHTML = '<i class="fas fa-play"></i> Resume';
+                statusText.textContent = 'Paused...';
+            }
+        }
+
+        // Stop speech
+        function stopSpeech() {
+            if (isSpeaking) {
+                window.speechSynthesis.cancel();
+                isSpeaking = false;
+                isPaused = false;
+                statusIndicator.style.display = 'none';
+                outputContent.innerHTML += '<p><i class="fas fa-stop" style="color: #e74c3c;"></i> Speech stopped.</p>';
+                speakBtn.disabled = false;
+                pauseBtn.textContent = 'Pause';
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            }
+        }
+
+        // Clear text
+        function clearText() {
+            textInput.value = '';
+            outputContent.innerHTML = '<p>Your converted speech will appear here. Click "Speak Text" to generate audio from your text.</p>';
+            audioPlayer.style.display = 'none';
+            statusIndicator.style.display = 'none';
+        }
+
+        // Download audio (simulated)
+        function downloadAudio() {
+            const text = textInput.value.trim();
+            
+            if (!text) {
+                outputContent.innerHTML = '<p style="color: #e74c3c;">Please enter some text first.</p>';
+                return;
+            }
+            
+            if (!isSpeaking && !speech) {
+                outputContent.innerHTML = '<p style="color: #e74c3c;">Please generate speech first by clicking "Speak Text".</p>';
+                return;
+            }
+            
+            // Simulate download process
+            statusIndicator.style.display = 'flex';
+            statusText.textContent = 'Preparing download...';
+            
+            setTimeout(() => {
+                statusText.textContent = 'Download ready!';
+                
+                // In a real implementation, this would create and download an audio file
+                // For this demo, we'll show a success message
+                outputContent.innerHTML += '<p><i class="fas fa-download" style="color: #4CAF50;"></i> Audio file ready for download (simulated).</p>';
+                
+                // Reset status after a delay
+                setTimeout(() => {
+                    statusIndicator.style.display = 'none';
+                }, 2000);
+            }, 1500);
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', initSpeechSynthesis);
+    </script>
+</body>
+</html>

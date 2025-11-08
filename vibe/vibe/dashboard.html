@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant Dashboard - amora.ai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #E6E6FA, #F5F5DC, #D8BFD8, #E6E6FA);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header */
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #6B5B95;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .dashboard-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Main Content Layout */
+        .dashboard-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* AI Bot Section */
+        .ai-bot-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .bot-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .bot-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .bot-info h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 5px;
+        }
+
+        .bot-info p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .bot-status {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .bot-conversation {
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(107, 91, 149, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 15px;
+            max-width: 85%;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bot-message {
+            background: rgba(107, 91, 149, 0.1);
+            border-bottom-left-radius: 5px;
+        }
+
+        .user-message {
+            background: rgba(107, 91, 149, 0.2);
+            border-bottom-right-radius: 5px;
+            margin-left: auto;
+        }
+
+        .message-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .bot-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .bot-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .bot-input input:focus {
+            outline: none;
+            border-color: #6B5B95;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 50px;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.3);
+        }
+
+        /* Mood Assessment */
+        .mood-assessment {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .mood-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #6B5B95;
+            margin-bottom: 15px;
+        }
+
+        .mood-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .mood-option {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(107, 91, 149, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+        }
+
+        .mood-option:hover {
+            transform: scale(1.05);
+            border-color: #6B5B95;
+        }
+
+        .mood-option.selected {
+            background: rgba(107, 91, 149, 0.1);
+            border-color: #6B5B95;
+        }
+
+        /* Knowledge Quiz */
+        .knowledge-quiz {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .quiz-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #6B5B95;
+            margin-bottom: 15px;
+        }
+
+        .quiz-question {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(107, 91, 149, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover {
+            background: rgba(107, 91, 149, 0.1);
+            border-color: #6B5B95;
+        }
+
+        .quiz-option.selected {
+            background: rgba(107, 91, 149, 0.1);
+            border-color: #6B5B95;
+        }
+
+        /* Features Section */
+        .features-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .features-header {
+            margin-bottom: 25px;
+        }
+
+        .features-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 10px;
+        }
+
+        .features-description {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(107, 91, 149, 0.1);
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(107, 91, 149, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Games Section */
+        .games-section {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(107, 91, 149, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .games-header {
+            margin-bottom: 25px;
+        }
+
+        .games-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 10px;
+        }
+
+        .games-description {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(107, 91, 149, 0.2);
+        }
+
+        .game-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #FF6584, #FF8A9B);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .game-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #6B5B95;
+            margin-bottom: 8px;
+        }
+
+        .game-description {
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Search Modal */
+        .tool-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+
+        .tool-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B5B95;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #6B5B95;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(107, 91, 149, 0.2);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #6B5B95;
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, #6B5B95, #8B7AA8);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.3);
+        }
+
+        .modal-output {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(107, 91, 149, 0.05);
+            border-radius: 10px;
+            min-height: 100px;
+            border: 1px solid rgba(107, 91, 149, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 15px;
+            }
+
+            .dashboard-title {
+                font-size: 2rem;
+            }
+
+            .dashboard-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .ai-bot-section,
+            .features-section {
+                min-width: 100%;
+            }
+
+            .features-grid,
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mood-options {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .bot-conversation {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-title {
+                font-size: 1.8rem;
+            }
+
+            .ai-bot-section,
+            .features-section,
+            .games-section {
+                padding: 20px;
+            }
+
+            .mood-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">AMORA.AI Dashboard</h1>
+            <p class="dashboard-subtitle">Your Personal AI Assistant - Let's get to know you better!</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <!-- AI Bot Section -->
+            <section class="ai-bot-section">
+                <div class="bot-header">
+                    <div class="bot-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="bot-info">
+                        <h3>AMORA Assistant</h3>
+                        <p>Your AI Companion</p>
+                        <div class="bot-status">
+                            <div class="status-indicator"></div>
+                            <span>Online & Ready to Help</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bot-conversation" id="conversation">
+                    <div class="message bot-message">
+                        <p class="message-text">Hello! I'm AMORA, your AI assistant. Let's start by understanding your mood today. How are you feeling?</p>
+                    </div>
+                </div>
+
+                <div class="mood-assessment" id="moodAssessment">
+                    <h4 class="mood-title">Select your current mood:</h4>
+                    <div class="mood-options">
+                        <div class="mood-option" data-mood="happy">😊</div>
+                        <div class="mood-option" data-mood="excited">🤩</div>
+                        <div class="mood-option" data-mood="calm">😌</div>
+                        <div class="mood-option" data-mood="sad">😔</div>
+                        <div class="mood-option" data-mood="stressed">😫</div>
+                        <div class="mood-option" data-mood="curious">🤔</div>
+                    </div>
+                </div>
+
+                <div class="knowledge-quiz" id="knowledgeQuiz" style="display: none;">
+                    <h4 class="quiz-title" id="quizTitle">Knowledge Assessment</h4>
+                    <p class="quiz-question" id="quizQuestion"></p>
+                    <div class="quiz-options" id="quizOptions"></div>
+                </div>
+
+                <div class="bot-input">
+                    <input type="text" id="userInput" placeholder="Type your message here...">
+                    <button class="send-btn" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features-section" id="featuresSection" style="display: none;">
+                <div class="features-header">
+                    <h2 class="features-title">AI-Powered Features</h2>
+                    <p class="features-description">Based on your knowledge level, these tools will adapt to provide the perfect experience for you.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card" data-feature="text-to-speech">
+                        <div class="feature-icon">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                        <h3 class="feature-title">Text to Speech</h3>
+                        <p class="feature-description">Convert any text into natural-sounding speech with customizable voices.</p>
+                    </div>
+                    <div class="feature-card" data-feature="text-to-image">
+                        <div class="feature-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <h3 class="feature-title">Text to Image</h3>
+                        <p class="feature-description">Generate stunning images from text descriptions using AI.</p>
+                    </div>
+                    <div class="feature-card" data-feature="search">
+                        <div class="feature-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="feature-title">Smart Search</h3>
+                        <p class="feature-description">Get explanations tailored to your knowledge level on any topic.</p>
+                    </div>
+                    <div class="feature-card" data-feature="games">
+                        <div class="feature-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3 class="feature-title">Fun Games</h3>
+                        <p class="feature-description">Play 5 different games to relax and challenge yourself.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Games Section -->
+        <section class="games-section" id="gamesSection" style="display: none;">
+            <div class="games-header">
+                <h2 class="games-title">Fun & Educational Games</h2>
+                <p class="games-description">Choose a game to play and have fun!</p>
+            </div>
+            <div class="games-grid">
+                <div class="game-card" data-game="trivia">
+                    <div class="game-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3 class="game-title">AI Trivia</h3>
+                    <p class="game-description">Test your knowledge with AI-generated trivia questions.</p>
+                </div>
+                <div class="game-card" data-game="word">
+                    <div class="game-icon">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <h3 class="game-title">Word Association</h3>
+                    <p class="game-description">Build creative connections between words and concepts.</p>
+                </div>
+                <div class="game-card" data-game="memory">
+                    <div class="game-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="game-title">Memory Challenge</h3>
+                    <p class="game-description">Test and improve your memory with AI-generated challenges.</p>
+                </div>
+                <div class="game-card" data-game="puzzle">
+                    <div class="game-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <h3 class="game-title">Puzzle Solver</h3>
+                    <p class="game-description">Solve complex puzzles with AI hints and guidance.</p>
+                </div>
+                <div class="game-card" data-game="story">
+                    <div class="game-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="game-title">Story Builder</h3>
+                    <p class="game-description">Create interactive stories with AI assistance.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="tool-modal" id="searchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Smart Search</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="modal-input" id="searchInput" placeholder="What would you like to learn about?">
+                <button class="modal-btn" id="searchBtn">Search</button>
+                <div class="modal-output" id="searchOutput">
+                    <p>Your search results will appear here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const conversation = document.getElementById('conversation');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const moodOptions = document.querySelectorAll('.mood-option');
+        const moodAssessment = document.getElementById('moodAssessment');
+        const knowledgeQuiz = document.getElementById('knowledgeQuiz');
+        const quizTitle = document.getElementById('quizTitle');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const featuresSection = document.getElementById('featuresSection');
+        const gamesSection = document.getElementById('gamesSection');
+        const featureCards = document.querySelectorAll('.feature-card');
+        const gameCards = document.querySelectorAll('.game-card');
+        const searchModal = document.getElementById('searchModal');
+        const closeButtons = document.querySelectorAll('.close-modal');
+        const searchBtn = document.getElementById('searchBtn');
+
+        // User data
+        let userData = {
+            mood: null,
+            knowledgeLevel: null, // beginner, intermediate, advanced
+            conversationHistory: [],
+            quizAnswers: []
+        };
+
+        // Knowledge assessment questions
+        const knowledgeQuestions = [
+            {
+                question: "How would you describe your familiarity with technology?",
+                options: [
+                    { text: "I'm just getting started", level: "beginner" },
+                    { text: "I know the basics", level: "intermediate" },
+                    { text: "I'm very comfortable with technology", level: "advanced" }
+                ]
+            },
+            {
+                question: "When learning something new, what approach works best for you?",
+                options: [
+                    { text: "Simple, step-by-step instructions", level: "beginner" },
+                    { text: "Examples and practical applications", level: "intermediate" },
+                    { text: "Directly diving into complex concepts", level: "advanced" }
+                ]
+            },
+            {
+                question: "How do you usually solve problems?",
+                options: [
+                    { text: "I follow guides or ask for help", level: "beginner" },
+                    { text: "I research and try different approaches", level: "intermediate" },
+                    { text: "I already have strategies I use", level: "advanced" }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        // Initialize the conversation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data from localStorage if available
+            const savedUserData = localStorage.getItem('amoraUserData');
+            if (savedUserData) {
+                userData = JSON.parse(savedUserData);
+                
+                // If we already have user data, skip the initial questions
+                if (userData.mood && userData.knowledgeLevel) {
+                    addBotMessage(`Welcome back! I remember you were feeling ${userData.mood} last time and your knowledge level is ${userData.knowledgeLevel}. How can I help you today?`);
+                    showFeatures();
+                }
+            }
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Send message on button click
+            sendBtn.addEventListener('click', sendMessage);
+            
+            // Send message on Enter key
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Mood selection
+            moodOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    moodOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    const mood = this.getAttribute('data-mood');
+                    userData.mood = mood;
+                    
+                    // Add user message
+                    addUserMessage(`I'm feeling ${mood}`);
+                    
+                    // Bot response based on mood
+                    setTimeout(() => {
+                        let response = '';
+                        switch(mood) {
+                            case 'happy':
+                                response = "That's wonderful! I'm glad you're feeling happy. Let's make the most of this positive energy!";
+                                break;
+                            case 'excited':
+                                response = "Exciting! I love your enthusiasm. Let's channel that energy into something creative!";
+                                break;
+                            case 'calm':
+                                response = "A calm mood is perfect for focused learning and creativity. What would you like to explore today?";
+                                break;
+                            case 'sad':
+                                response = "I'm sorry you're feeling down. I'm here to help lift your spirits. Let's try something fun or relaxing.";
+                                break;
+                            case 'stressed':
+                                response = "I understand stress can be challenging. Let's work on something that might help you relax and refocus.";
+                                break;
+                            case 'curious':
+                                response = "Curiosity is the fuel of learning! I'm excited to explore new ideas with you.";
+                                break;
+                        }
+                        
+                        addBotMessage(response);
+                        
+                        // Start knowledge assessment
+                        setTimeout(() => {
+                            startKnowledgeAssessment();
+                        }, 1000);
+                    }, 500);
+                });
+            });
+            
+            // Feature cards
+            featureCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const feature = this.getAttribute('data-feature');
+                    handleFeatureClick(feature);
+                });
+            });
+            
+            // Game cards
+            gameCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const game = this.getAttribute('data-game');
+                    handleGameClick(game);
+                });
+            });
+            
+            // Close modals
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modal = this.closest('.tool-modal');
+                    modal.classList.remove('active');
+                });
+            });
+            
+            // Close modal when clicking outside
+            searchModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+            
+            // Search functionality
+            searchBtn.addEventListener('click', function() {
+                const query = document.getElementById('searchInput').value;
+                performSearch(query);
+            });
+        }
+
+        // Start knowledge assessment
+        function startKnowledgeAssessment() {
+            // Hide mood assessment
+            moodAssessment.style.display = 'none';
+            
+            // Show knowledge quiz
+            knowledgeQuiz.style.display = 'block';
+            
+            // Display first question
+            displayQuestion();
+        }
+
+        // Display current question
+        function displayQuestion() {
+            if (currentQuestionIndex >= knowledgeQuestions.length) {
+                // Quiz completed
+                determineKnowledgeLevel();
+                return;
+            }
+            
+            const question = knowledgeQuestions[currentQuestionIndex];
+            quizTitle.textContent = `Question ${currentQuestionIndex + 1} of ${knowledgeQuestions.length}`;
+            quizQuestion.textContent = question.question;
+            
+            // Clear previous options
+            quizOptions.innerHTML = '';
+            
+            // Add new options
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option.text;
+                optionElement.setAttribute('data-level', option.level);
+                optionElement.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.quiz-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Store the answer
+                    userData.quizAnswers.push(option.level);
+                    
+                    // Move to next question after a delay
+                    setTimeout(() => {
+                        currentQuestionIndex++;
+                        displayQuestion();
+                    }, 800);
+                });
+                
+                quizOptions.appendChild(optionElement);
+            });
+        }
+
+        // Determine knowledge level based on answers
+        function determineKnowledgeLevel() {
+            // Count occurrences of each level
+            const levelCounts = {
+                beginner: 0,
+                intermediate: 0,
+                advanced: 0
+            };
+            
+            userData.quizAnswers.forEach(level => {
+                levelCounts[level]++;
+            });
+            
+            // Determine the most common level
+            let maxLevel = 'beginner';
+            let maxCount = levelCounts.beginner;
+            
+            if (levelCounts.intermediate > maxCount) {
+                maxLevel = 'intermediate';
+                maxCount = levelCounts.intermediate;
+            }
+            
+            if (levelCounts.advanced > maxCount) {
+                maxLevel = 'advanced';
+            }
+            
+            userData.knowledgeLevel = maxLevel;
+            
+            // Save user data
+            saveUserData();
+            
+            // Hide quiz
+            knowledgeQuiz.style.display = 'none';
+            
+            // Show bot message with results
+            let levelMessage = '';
+            switch(maxLevel) {
+                case 'beginner':
+                    levelMessage = "Based on your answers, I'll make sure to explain things clearly and simply for you as a beginner.";
+                    break;
+                case 'intermediate':
+                    levelMessage = "Based on your answers, I'll provide more detailed explanations since you have some experience.";
+                    break;
+                case 'advanced':
+                    levelMessage = "Based on your answers, I'll skip the basics and dive right into advanced concepts for you.";
+                    break;
+            }
+            
+            addBotMessage(levelMessage);
+            
+            // Show features after a delay
+            setTimeout(() => {
+                showFeatures();
+            }, 1000);
+        }
+
+        // Show features section
+        function showFeatures() {
+            featuresSection.style.display = 'block';
+            gamesSection.style.display = 'block';
+            
+            addBotMessage("Now you can explore all the features! Click on any feature to get started.");
+        }
+
+        // Send user message
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message === '') return;
+            
+            addUserMessage(message);
+            userInput.value = '';
+            
+            // Process user message
+            setTimeout(() => {
+                processUserMessage(message);
+            }, 500);
+        }
+
+        // Add user message to conversation
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.innerHTML = `<p class="message-text">${text}</p>`;
+            conversation.appendChild(messageDiv);
+            conversation.scrollTop = conversation.scrollHeight;
+            
+            // Add to conversation history
+            userData.conversationHistory.push({ sender: 'user', text, timestamp: new Date() });
+            saveUserData();
+        }
+
+        // Add bot message to conversation
+        function addBotMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message';
+            messageDiv.innerHTML = `<p class="message-text">${text}</p>`;
+            conversation.appendChild(messageDiv);
+            conversation.scrollTop = conversation.scrollHeight;
+            
+            // Add to conversation history
+            userData.conversationHistory.push({ sender: 'bot', text, timestamp: new Date() });
+            saveUserData();
+        }
+
+        // Process user message and generate response
+        function processUserMessage(message) {
+            message = message.toLowerCase();
+            
+            if (message.includes('help') || message.includes('what can you do')) {
+                addBotMessage("I can help you with text-to-speech, text-to-image generation, searching for information, and playing fun games! Just click on any of the feature cards to get started.");
+            } else if (message.includes('thank') || message.includes('thanks')) {
+                addBotMessage("You're welcome! I'm always happy to help. Is there anything else you'd like to explore?");
+            } else {
+                // Default response
+                addBotMessage("I understand. How can I assist you further? Feel free to try any of the features or games!");
+            }
+        }
+
+        // Save user data to localStorage
+        function saveUserData() {
+            localStorage.setItem('amoraUserData', JSON.stringify(userData));
+        }
+
+        // Handle feature click
+        function handleFeatureClick(feature) {
+            switch(feature) {
+                case 'text-to-speech':
+                    // Redirect to text-to-speech page
+                    window.location.href = 'text-to-speech.html';
+                    break;
+                case 'text-to-image':
+                    // Redirect to text-to-image page
+                    window.location.href = 'text-to-image.html';
+                    break;
+                case 'search':
+                    // Open search modal
+                    searchModal.classList.add('active');
+                    break;
+                case 'games':
+                    // Show games section message
+                    addBotMessage("Great! We have 5 fun games for you to choose from. Click on any game to start playing!");
+                    break;
+            }
+        }
+
+        // Handle game click
+        function handleGameClick(game) {
+            let gamePage = '';
+            
+            switch(game) {
+                case 'trivia':
+                    gamePage = 'trivia.html';
+                    break;
+                case 'word':
+                    gamePage = 'word-association.html';
+                    break;
+                case 'memory':
+                    gamePage = 'memory-challenge.html';
+                    break;
+                case 'puzzle':
+                    gamePage = 'puzzle-solver.html';
+                    break;
+                case 'story':
+                    gamePage = 'story-builder.html';
+                    break;
+            }
+            
+            // Redirect to game page
+            window.location.href = gamePage;
+        }
+
+        // Search functionality
+        function performSearch(query) {
+            // In a real implementation, this would call a search API
+            // For this demo, we'll simulate the functionality
+            
+            const output = document.getElementById('searchOutput');
+            output.innerHTML = `<p><i class="fas fa-spinner fa-spin"></i> Searching for: "${query}"</p>`;
+            
+            // Simulate search based on knowledge level
+            setTimeout(() => {
+                let explanation = '';
+                
+                if (userData.knowledgeLevel === 'beginner') {
+                    explanation = `
+                        <p><strong>Beginner Explanation:</strong></p>
+                        <p>${query} is a concept that's important to understand. Let me explain it in simple terms...</p>
+                        <p>Imagine it like this: It's similar to something you already know, but with these key differences...</p>
+                        <p>The main thing to remember is that it helps with...</p>
+                    `;
+                } else if (userData.knowledgeLevel === 'intermediate') {
+                    explanation = `
+                        <p><strong>Intermediate Explanation:</strong></p>
+                        <p>${query} involves several key components. First, there's the foundational aspect which...</p>
+                        <p>Then we have the practical applications, which include...</p>
+                        <p>It's important to understand how this connects to related concepts like...</p>
+                    `;
+                } else {
+                    explanation = `
+                        <p><strong>Advanced Explanation:</strong></p>
+                        <p>${query} can be understood through its theoretical underpinnings, particularly in relation to...</p>
+                        <p>The current research suggests several nuanced interpretations, including...</p>
+                        <p>For those with expertise, the most interesting developments are happening in areas like...</p>
+                    `;
+                }
+                
+                output.innerHTML = `
+                    <p><i class="fas fa-check"></i> Search completed!</p>
+                    <div style="margin-top: 15px;">
+                        ${explanation}
+                    </div>
+                `;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
